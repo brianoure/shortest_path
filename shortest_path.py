@@ -1,21 +1,19 @@
 """
-Find the shortest path between the start_node and the end_node as described by the network_description_list
+Find the shortest path between the start_node and the end_node as described by the network_description_list.
+start_node_index is the index refering to the starting point of a paticular path/road
+end_node_index is the index referring to the  ending node of a particular path/road
+reversible is a boolean flag indicating whether a path start and end nodes can be interchanged
+distance refers to the weight of a specified path/road
 """
 
-"""[[start,end,reverse,distance]...]"""
-nodes = 5
-network = [
-            [0,1,1,150],
-            [0,2,1,250],
-            [0,3,1,450],
-            [1,2,1,750],
-            [1,4,1,650],
-            [2,3,1,250],
-            [3,4,1,550],
-            [4,2,1,350]            
-          ]
-startNode_endNode_query_list = [1,3]
-mybase        = nodes
+"""
+User input:
+nodes (an integer value, number of end-points in a network, corresponds to the index from a list of nodes) eg nodes=5
+network (mesh network as defined by a list) eg network = [  [0,1,1,150],[0,2,1,250],[0,3,1,450],[1,2,1,750],[1,4,1,650],[2,3,1,250],[3,4,1,550],[4,2,1,350]   ]
+startNode_endNode_query_list (indices of start and end points for which we want to know the shortest path) eg startNode_endNode_query_list = [1,3]
+"""
+
+mybase = nodes
 
 class BRANCH:
     def __init__(this,start,end,distance):
@@ -118,7 +116,7 @@ def list_has_startValue_and_endsWith(start,end,mylist):
     return (starting and (mylist[mylist_length-1]==end))
 
 
-def shortest_path(network__description_list,start_end_nodes_query_list):
+def shortest_path_main(network__description_list,start_end_nodes_query_list):
     #Create all the possibilities given the path reversible flags i.e branches_list[2]
     mybranches_list=[]
     for x in range(len(network)):
@@ -132,18 +130,12 @@ def shortest_path(network__description_list,start_end_nodes_query_list):
         num_list   = number_to_base_list(possibility,mybase)
         mydistance = distance_covered(num_list,mybranches_list)
         route_list = route_list + [ROUTE( num_list,mydistance )]
-    #for y in range(len(route_list)):print(route_list[y].node_list,route_list[y].route_distance)
-
-    """MOD"""    
     selected_route_list = []
     for h in range(len(route_list)):
         the_list_length = len(route_list[h].node_list)
         if( (route_list[h].node_list[0]==startNode_endNode_query_list[0]) and (route_list[h].node_list[the_list_length-1]==startNode_endNode_query_list[1]) ):
             if(not(type(route_list[h].route_distance)==type(""))):
                 selected_route_list = selected_route_list + [ route_list[h] ]
-    for y in range(len(selected_route_list)):print(selected_route_list[y].node_list,selected_route_list[y].route_distance)
-    """MOD"""
-
     route_list_least_index = 0
     y = 0
     the_maximum = len(selected_route_list)
@@ -153,5 +145,5 @@ def shortest_path(network__description_list,start_end_nodes_query_list):
         y = y+1
     return [ selected_route_list[route_list_least_index].node_list , selected_route_list[route_list_least_index].route_distance ]
 
-print(shortest_path(network,startNode_endNode_query_list))
+#eg program call: shortest_path_main(nodes,network,startNode_endNode_query_list)
 
